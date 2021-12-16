@@ -3,10 +3,8 @@ const express = require('express');
 const cors = require('cors');
 const https = require('https');
 
-// Server configuration
 const token = "REPLACE ME WITH SECRET KEY";
  
-
 const app = express();
 
 app.use(express.json());
@@ -14,37 +12,37 @@ app.use(express.json());
 app.use(cors({ origin: true }));
 
 
-app.post('/ValidationRequests/complete', function (req, res) {
-    let data = JSON.stringify({})
-    
-    const options = {
-      host: "dvs2.idware.net",
-      port: 443,
-      path: "/api/v3/Verify/" + req.body.requestId,
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json-patch+json",
-        "Content-Length": data.length,
-        Authorization: "Bearer " + token,
-      },
-    };
+app.post("/Verify", function (req, res) {
+  let requestData = JSON.stringify(req.body);
 
-    let chunks = '';
-    const httpreq = https.request(options, function (response) {
-        
-        response.setEncoding('utf8');
-        
-        response.on('data', function (chunk) {
-            chunks = chunks + chunk
-        });
+  const options = {
+    host: "dvs2.idware.net",
+    port: 443,
+    path: "/api/v3/Verify",
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json-patch+json",
+      Authorization: "Bearer " + token,
+    },
+  };
 
-        response.on('end', function() {
-            let data = JSON.parse(chunks)
-            res.json(data)
-        })
+  let chunks = "";
+  const httpreq = https.request(options, function (response) {
+    response.setEncoding("utf8");
+
+    response.on("data", function (chunk) {
+      chunks = chunks + chunk;
     });
-    httpreq.write(data);
-    httpreq.end();
+
+    response.on("end", function () {
+      let responseData = JSON.parse(chunks);
+      res.json(responseData);
+    });
+  });
+
+  httpreq.write(requestData);
+  httpreq.end();
 });
+
 
 exports.api = functions.https.onRequest(app);

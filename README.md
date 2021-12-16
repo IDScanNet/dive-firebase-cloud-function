@@ -34,3 +34,6 @@ firebase init functions
 firebase deploy
 ```
 
+# NOTE
+
+Deployments to Firebase may fail if using a version of Node higher than **v14.18.2**
