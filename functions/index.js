@@ -11,7 +11,6 @@ app.use(express.json());
 // Automatically allow cross-origin requests
 app.use(cors({ origin: true }));
 
-
 app.post("/Verify", function (req, res) {
   let requestData = JSON.stringify(req.body);
 
@@ -22,7 +21,7 @@ app.post("/Verify", function (req, res) {
     method: "POST",
     headers: {
       "Content-Type": "application/json-patch+json",
-      Authorization: "Bearer " + token,
+      "Authorization": "Bearer " + token,
     },
   };
 
